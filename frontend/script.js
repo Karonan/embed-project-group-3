@@ -6,82 +6,108 @@ pumpButton
 pumpStatus
 */
 
-import getStatus from "./api";
-var payload = {pumpMode:-1,waterHeight:0,pumpStatus:-1};
 
-function checkInput(input){
-    if (input == -1){
-        return "Off"
+var payload = {pumpMode:-1,waterHeight:0,pumpStatus:-1};
+const BACKEND_URL = "http://localhost:3222/api"
+
+async function getStatus(){
+    const response = await fetch(`${BACKEND_URL}/status`)
+    if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        payload = data;
+        console.log(payload)
+    } else {
+        alert("Error fetching status");
     }
-    else return "On"
+}
+
+async function togglePump(){
+    await fetch(`${BACKEND_URL}/toggle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+}
+
+async function toggleMode(){
+    await fetch(`${BACKEND_URL}/setMode`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+    })
 }
 
 function setHeight(input){
     document.getElementById("height").innerHTML = input
 }
 
-function setAutoStatus(input){
-    if (input ==="On"){
+async function setAutoStatus(input){
+    if (input == 1){
         document.getElementById("autoStatus").innerHTML = "On"
         document.getElementById("pumpButton").disabled = true;
-        payload.pumpMode = 1;
+        
     }
     else {
         document.getElementById("autoStatus").innerHTML = "Off"
         document.getElementById("pumpButton").disabled = false;
-        payload.pumpMode = -1;
+        
     }
-    //Send data to server
+    payload.pumpMode *= -1;
+    await toggleMode()
 }
 
-function setPumpStatus(input){
-    if (input ==="On"){
+async function setPumpStatus(input){
+    if (input == 1){
         document.getElementById("pumpStatus").innerHTML = "On"
-        payload.pumpStatus = 1;
+        
     }
     else {
         document.getElementById("pumpStatus").innerHTML = "Off"
-        payload.pumpStatus = -1;
+        
     }
-    //Send data to server
+    payload.pumpStatus *= -1;
+    await togglePump()
 }
 
 document.getElementById("autoButton").addEventListener("click", function(){
-    var status =  checkInput(payload.pumpMode)
-    if (status === "On"){
-        setAutoStatus("Off")
+    var status =  payload.pumpMode
+    if (status == 1){
+        setAutoStatus(-1)
     }
     else {
-        setAutoStatus("On")
+        setAutoStatus(1)
         
     }
 });
 document.getElementById("pumpButton").addEventListener("click", function(){
-    var status = checkInput(payload.pumpStatus)
-    if (status === "On"){
-        setPumpStatus("Off")
+    var status = payload.pumpStatus
+    if (status == 1){
+        setPumpStatus(-1)
     }
     else {
-        setPumpStatus("On")
+        setPumpStatus(1)
     }
 });
 
-async function getJSON(){
-    payload = getStatus();
+
+async function initPage(){
+    await updatePage();
+    setAutoStatus(payload.pumpMode)
+    console.log(payload)
 }
 
-function initPage(){
-    updatePage();
-    setAutoStatus(checkInput(payload.pumpMode))
-}
-
-function updatePage(){
+async function updatePage(){
+    await getStatus();
     setHeight(payload.waterHeight)
-    setPumpStatus(checkInput(payload.pumpStatus))
+    setPumpStatus(payload.pumpStatus)
 }
 
 //Program Setup
-getJSON();
 //setHeight(0)
 initPage()
 //Program Loop
+
+setInterval(updatePage(), 1000)

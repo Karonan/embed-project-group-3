@@ -6,14 +6,16 @@ export const updateHeight = async (req, res) => {
 };
 
 export const togglePump = async (req, res) => {
-  pumpMode = pumpMode*(-1);
+  Data.pumpStatus = Data.pumpStatus*(-1);
   res.status(200).json({ message: "OK" });
+  console.log(Data);
 };
 
 
 export const setMode = async (req, res) => {
-  pumpMode = pumpStatus*(-1);
+  Data.pumpMode = Data.pumpMode*(-1);
   res.status(200).json({ message: "OK" });
+  console.log(Data);
 };
 
 export const getStatus = async (req, res) => {

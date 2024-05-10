@@ -6,7 +6,7 @@ pumpButton
 pumpStatus
 */
 
-document.getElementById("height").innerHTML = 9;
+//document.getElementById("height").innerHTML = 9;
 
 document.getElementById("autoButton").addEventListener("click", function(){
     var status = document.getElementById("autoStatus").innerHTML

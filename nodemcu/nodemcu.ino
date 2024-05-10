@@ -11,14 +11,16 @@ const char* password = "inecrft47";
 const char* serverName = "http://192.168.222.212:3222/api";
 const char* postHeight = "http://192.168.222.212:3222/api/postHeight";
 const char* serverStatus = "http://192.168.222.212:3222/api/status";
+const char* toggle = "http://192.168.222.212:3222/api/toggle";
 
 unsigned long lastTime = 0;
-// Set timer to 5 seconds (5000)
-unsigned long timerDelay = 5000;
+// Set timer to 1 seconds (1000)
+unsigned long timerDelay = 1000;
 
 // Pins
 const int pumpModePin = 0;
 const int pumpTogglePin = 16;
+const int pumpStatus = 13;
 
 EspSoftwareSerial::UART testSerial;
 char buf[50];
@@ -32,6 +34,7 @@ void setup() {
 
   pinMode(pumpModePin, OUTPUT);
   pinMode(pumpTogglePin, OUTPUT);
+  pinMode(pumpStatus, INPUT);
 
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
@@ -112,7 +115,15 @@ void loop() {
       
       WiFiClient client;
       HTTPClient http;
-      
+
+      if (int(myObject[keys[0]]) == -1 && ((digitalRead(pumpStatus) == LOW && int(myObject[keys[2]]) == -1) || (digitalRead(pumpStatus) == HIGH && int(myObject[keys[2]]) != -1)))
+      {
+        http.begin(client, toggle);
+        http.addHeader("Content-Type", "application/json");
+        int httpResponseCode = http.POST("");        
+        http.end();
+      }
+
       //IP address with path
       http.begin(client, postHeight);
 

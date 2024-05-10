@@ -45,7 +45,7 @@ function setHeight(input){
 }
 
 async function setAutoStatus(input){
-    if (input == 1){
+    if (input == -1){
         document.getElementById("autoStatus").innerHTML = "On"
         document.getElementById("pumpButton").disabled = true;
         
@@ -55,8 +55,8 @@ async function setAutoStatus(input){
         document.getElementById("pumpButton").disabled = false;
         
     }
-    payload.pumpMode *= -1;
-    await toggleMode()
+    // payload.pumpMode *= -1;
+    //
 }
 
 async function setPumpStatus(input){
@@ -68,11 +68,11 @@ async function setPumpStatus(input){
         document.getElementById("pumpStatus").innerHTML = "Off"
         
     }
-    payload.pumpStatus *= -1;
-    await togglePump()
+    // payload.pumpStatus *= -1;
+    //await togglePump()
 }
 
-document.getElementById("autoButton").addEventListener("click", function(){
+document.getElementById("autoButton").addEventListener("click", async function(){
     var status =  payload.pumpMode
     if (status == 1){
         setAutoStatus(-1)
@@ -81,8 +81,9 @@ document.getElementById("autoButton").addEventListener("click", function(){
         setAutoStatus(1)
         
     }
+    await toggleMode()
 });
-document.getElementById("pumpButton").addEventListener("click", function(){
+document.getElementById("pumpButton").addEventListener("click", async function(){
     var status = payload.pumpStatus
     if (status == 1){
         setPumpStatus(-1)
@@ -90,6 +91,7 @@ document.getElementById("pumpButton").addEventListener("click", function(){
     else {
         setPumpStatus(1)
     }
+    await togglePump()
 });
 
 
@@ -107,7 +109,7 @@ async function updatePage(){
 
 //Program Setup
 //setHeight(0)
-initPage()
+await initPage()
 //Program Loop
 
-setInterval(updatePage(), 1000)
+setInterval(updatePage, 500)

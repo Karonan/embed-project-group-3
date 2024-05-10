@@ -133,25 +133,25 @@ int main(void)
        distance = (val2-val1)* 0.034/2;
        if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6) == GPIO_PIN_RESET){
            if(distance <=10){
-        	   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+        	   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
         	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
            }
            else{
-        	   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+        	   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
         	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
            }
        }
        else{
     	   if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5) == GPIO_PIN_RESET){
-    		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+    		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
     	   }
     	   else{
-    		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+    		   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
     	   }
        }
        sprintf(string,"%d", distance);
        for(int i = 0 ; i<strlen(string);i++){
-//           HAL_UART_Transmit(&huart2, &string[i], 1, 10);
+           HAL_UART_Transmit(&huart2, &string[i], 1, 10);
            HAL_UART_Transmit(&huart1, &string[i], 1, 10);
            HAL_Delay(50);
        }

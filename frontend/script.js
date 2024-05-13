@@ -40,33 +40,49 @@ async function toggleMode(){
     })
 }
 
+const pumpButton =  document.getElementById("pumpButton")
+const autoStatus = document.getElementById("autoStatus")
+
 function setHeight(input){
     document.getElementById("height").innerHTML = input
 }
 
 async function setAutoStatus(input){
     if (input == -1){
-        document.getElementById("autoStatus").innerHTML = "On"
-        document.getElementById("pumpButton").disabled = true;
-        
+        autoStatus.innerHTML = "On"
+        autoStatus.style.color = "green"
+        pumpButton.disabled = true;
+        pumpButton.addEventListener('mouseenter', function() {
+            pumpButton.style.backgroundColor = '#ffffff';
+            pumpButton.style.cursor = "default"
+        })
     }
     else {
-        document.getElementById("autoStatus").innerHTML = "Off"
-        document.getElementById("pumpButton").disabled = false;
-        
+        autoStatus.innerHTML = "Off"
+        autoStatus.style.color = "red"
+        pumpButton.disabled = false;
+        pumpButton.addEventListener('mouseenter', function() {
+            pumpButton.style.backgroundColor = '#ababab';
+            pumpButton.style.cursor = "pointer"
+        })
+        pumpButton.addEventListener('mouseleave', function() {
+            pumpButton.style.backgroundColor = '#ffffff';
+            pumpButton.style.cursor = "default"
+        })
     }
     // payload.pumpMode *= -1;
     //
 }
 
 async function setPumpStatus(input){
+    const pumpStatus = document.getElementById("pumpStatus")
     if (input == 1){
-        document.getElementById("pumpStatus").innerHTML = "On"
-        
+        pumpStatus.innerHTML = "On"
+        pumpStatus.style.color = "green"
     }
     else {
-        document.getElementById("pumpStatus").innerHTML = "Off"
-        
+        pumpStatus.innerHTML = "Off"
+        pumpStatus.style.color = "red"
     }
     // payload.pumpStatus *= -1;
     //await togglePump()

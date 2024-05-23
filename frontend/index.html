@@ -9,12 +9,10 @@
         <body>
             <div id="container">
                 <h1 id="title">Forgot the key? No problem</h1>
-                <h2>Water height : <span id = "height"></span>cm</h2>
-                <div id="tInput">
-                    <h2>Set water height threshold: </h2>
-                    <input id="username-input" type="text" placeholder="height in (cm)" />
-                </div>
-                
+                <h2>Water height : <span id = "height"></span>cm </h2>
+                <h2 id="stText">Set water height threshold : 3.8</h2>
+                <input type="range" min="0" max="75" value="38" class="slider" id="myRange">
+                <!-- <button id = "thresholdButton">Set</button> -->
                 <h2>Automatic water pump mode: <span id = "autoStatus"></span></h2>
                 <button id = "autoButton">Toggle</button>
                 <h2>Water pump: <span id = "pumpStatus"></span></h2>

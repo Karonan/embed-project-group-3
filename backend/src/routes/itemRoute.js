@@ -8,5 +8,6 @@ router.get("/status", Controller.getStatus);
 router.post("/postHeight", Controller.updateHeight);
 router.post("/toggle", Controller.togglePump);
 router.post("/setMode", Controller.setMode);
+router.post("/postLevel", Controller.setWaterThreshold);
 
 export default router;

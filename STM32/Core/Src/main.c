@@ -104,9 +104,7 @@ int main(void)
     char string[15];
     char a = '\n';
     char b = '\r';
-    char c[4];
-    char o = 'o';
-    char f = 'f';
+    char c;
     HAL_TIM_Base_Start(&htim3);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, GPIO_PIN_RESET);
   /* USER CODE END 2 */
@@ -114,6 +112,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
     int mode = 0;
+    int waterLevel = 10;
   while (1)
   {
     /* USER CODE END WHILE */
@@ -130,9 +129,9 @@ int main(void)
        pMillis = HAL_GetTick();
        while ((HAL_GPIO_ReadPin (GPIOA, GPIO_PIN_8)) && pMillis + 50 > HAL_GetTick());
        val2 = __HAL_TIM_GET_COUNTER (&htim3);
-       distance = (val2-val1)* 0.034/2;
+       distance = (val2-val1)* 0.34/2;
        if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6) == GPIO_PIN_RESET){
-           if(distance <=10){
+           if(distance <=waterLevel){
         	   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
         	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
            }
@@ -151,13 +150,16 @@ int main(void)
        }
        sprintf(string,"%d", distance);
        for(int i = 0 ; i<strlen(string);i++){
-           HAL_UART_Transmit(&huart2, &string[i], 1, 10);
            HAL_UART_Transmit(&huart1, &string[i], 1, 10);
+           HAL_UART_Transmit(&huart2, &string[i], 1, 10);
            HAL_Delay(50);
        }
        HAL_UART_Transmit(&huart1, &a, 1, 10);
        HAL_UART_Transmit(&huart2, &b, 1, 10);
        HAL_UART_Transmit(&huart2, &a, 1, 10);
+       if(HAL_UART_Receive(&huart1, &c, 1, 10)==HAL_OK){
+    	   waterLevel = c;
+       }
        HAL_Delay(50);
   }
   /* USER CODE END 3 */

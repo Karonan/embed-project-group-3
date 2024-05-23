@@ -8,14 +8,14 @@ const char* ssid = "Inecrft";
 const char* password = "inecrft47";
 
 //IP address with path
-const char* serverName = "http://192.168.222.212:3222/api";
-const char* postHeight = "http://192.168.222.212:3222/api/postHeight";
-const char* serverStatus = "http://192.168.222.212:3222/api/status";
-const char* toggle = "http://192.168.222.212:3222/api/toggle";
+const char* serverName = "http://35.187.230.199:3222/api";
+const char* postHeight = "http://35.187.230.199:3222/api/postHeight";
+const char* serverStatus = "http://35.187.230.199:3222/api/status";
+const char* toggle = "http://35.187.230.199:3222/api/toggle";
 
 unsigned long lastTime = 0;
 // Set timer to 1 seconds (1000)
-unsigned long timerDelay = 1000;
+unsigned long timerDelay = 500;
 
 // Pins
 const int pumpModePin = 0;
@@ -84,18 +84,21 @@ void loop() {
         return;
       }
     
-      Serial.print("JSON object = ");
+      Serial.print("JSON GET object = ");
       Serial.println(myObject);
     
       //an array of all the keys in the object
-      JSONVar keys = myObject.keys(); // {pumpMode, waterHeight, pumpStatus}
+      JSONVar keys = myObject.keys(); // {pumpMode, waterHeight, pumpStatus, waterTreshold}
+
+      // Serial.println(char(myObject[keys[3]]));
+      testSerial.write(char(myObject[keys[3]])); // send waterTreshold to STM
     
-      for (int i = 0; i < keys.length(); i++) {
-        JSONVar value = myObject[keys[i]];
-        Serial.print(keys[i]);
-        Serial.print(" = ");
-        Serial.println(value);
-      }
+      // for (int i = 0; i < keys.length(); i++) {
+      //   JSONVar value = myObject[keys[i]];
+      //   Serial.print(keys[i]);
+      //   Serial.print(" = ");
+      //   Serial.println(value);
+      // }
 
       if (int(myObject[keys[0]]) == -1) // Pump Mode AUTO
       {
@@ -130,13 +133,15 @@ void loop() {
       // Specify content-type header
       http.addHeader("Content-Type", "application/json");
       // Data to send with HTTP POST
-      String httpRequestData = "{\"api_key\":\"tPmAT5Ab3j7F9\",\"sensor\":\"BME280\",\"height\":\""+waterHeight+"\"}";
+      String httpRequestData = "{\"api_key\":\"tPmAT5Ab3j7F9\",\"sensor\":\"HC-SR04\",\"height\":\""+waterHeight+"\"}";
+      Serial.print("POST object");
       Serial.println(httpRequestData);
       // Send HTTP POST request
       int httpResponseCode = http.POST(httpRequestData);
      
       Serial.print("HTTP POST Response code: ");
       Serial.println(httpResponseCode);
+      Serial.println("");
         
       // Free resources
       http.end();

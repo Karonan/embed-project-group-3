@@ -38,6 +38,19 @@ async function toggleMode(){
     })
 }
 
+async function setThreshold(threshold){
+    const waterLevel = {
+        level: threshold
+    }
+    await fetch(`${BACKEND_URL}/postLevel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(waterLevel),
+      })
+}
+
 const pumpButton =  document.getElementById("pumpButton")
 const autoStatus = document.getElementById("autoStatus")
 

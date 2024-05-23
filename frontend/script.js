@@ -7,14 +7,16 @@ pumpStatus
 */
 
 
-var payload = {pumpMode:-1,waterHeight:0,pumpStatus:-1};
+var payload = {pumpMode:-1,waterHeight:0,pumpStatus:-1,waterThreshold:0};
 const BACKEND_URL = "http://35.187.230.199:3222/api"
 
 async function getStatus(){
     const response = await fetch(`${BACKEND_URL}/status`)
     if (response.ok) {
         const data = await response.json();
+        console.log(data)
         payload = data;
+        console.log(payload)
     } else {
         alert("Error fetching status");
     }
@@ -40,7 +42,7 @@ async function toggleMode(){
 
 async function setThreshold(threshold){
     const waterLevel = {
-        level: threshold
+        level: parseInt(threshold)
     }
     await fetch(`${BACKEND_URL}/postLevel`, {
         method: "POST",
@@ -53,11 +55,14 @@ async function setThreshold(threshold){
 
 const pumpButton =  document.getElementById("pumpButton")
 const autoStatus = document.getElementById("autoStatus")
+const thresholdButton = document.getElementById("thresholdButton")
+const thresholdInput = document.querySelector("#thresholdInput")
 
 function setHeight(input){
-    document.getElementById("height").innerHTML = input
+    let n = parseFloat(7.5 - input/10)
+    n = n.toPrecision(2)
+    document.getElementById("height").innerHTML = n
 }
-
 
 async function setAutoStatus(input){
     if (input == -1){
@@ -100,6 +105,22 @@ async function setPumpStatus(input){
     //await togglePump()
 }
 
+function floatToString(input){
+    let n = parseFloat(input)/10
+    n = n.toPrecision(2)
+    return n.toString()
+}
+
+// thresholdButton.addEventListener("click", async function(){
+//     var input = parseFloat(thresholdInput.value)
+//     input = input.toPrecision(2)
+//     input *= 10
+//     input = 75 - input
+//     if(input < 0) input = 0
+//     await setThreshold(input)
+//     thresholdInput.value = ''
+// })
+
 document.getElementById("autoButton").addEventListener("click", async function(){
     var status =  payload.pumpMode
     if (status == 1){
@@ -122,14 +143,45 @@ document.getElementById("pumpButton").addEventListener("click", async function()
     await togglePump()
 });
 
+var slider = document.getElementById("myRange");
+var output = document.getElementById("stText");
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    output.innerHTML = "Set water height threshold : "+floatToString(this.value)+" cm";
+}
+
+
+var isDragging = false;
+
+slider.addEventListener('mousedown', function(event) {
+    isDragging = true;
+});
+
+slider.addEventListener('mouseup', function(event) {
+    if (isDragging) {
+        isDragging = false;
+        var input = parseFloat(slider.value)/10
+        input = input.toPrecision(2)
+        input *= 10
+        input = 75 - input
+        // if(input < 0) input = 0
+        setThreshold(input)
+    }
+});
+
 
 async function initPage(){
     await updatePage();
-    setAutoStatus(payload.pumpMode)
+    let n = parseFloat(7.5 - payload.waterThreshold/10)
+    n = n.toPrecision(2)
+    output.innerHTML = "Set water height threshold : "+n.toString()+" cm";
+    slider.value = (75-payload.waterThreshold).toString()
 }
 
 async function updatePage(){
     await getStatus();
+    // console.log(payload)
     setHeight(payload.waterHeight)
     setPumpStatus(payload.pumpStatus)
     setAutoStatus(payload.pumpMode)

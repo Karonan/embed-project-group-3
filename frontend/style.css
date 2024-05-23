@@ -13,6 +13,7 @@ button{
     transition: 0.2s;
     background-color: #ffffff;
     font-family: "Lato", sans-serif;
+    width: 100px;
 }
 
 button:hover {
@@ -37,5 +38,33 @@ button:hover {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    width: 32vw;
+}
+
+#thresholdInput{
+    padding: 0.5rem 0.75rem;
+    outline: none;
+    border-radius: 0.25rem;
+    border: 1px solid gray;
+}
+
+input[type=range] {
+    margin-top: 20px;
+    width: 200px;
+}
+
+#stText{
+    /* padding-right: 10pxx; */
+    align-items: center;
     justify-content: center;
 }
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+.slider{
+    align-items: center;
+    justify-content: center;
+}
+  

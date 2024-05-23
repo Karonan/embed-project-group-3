@@ -14,9 +14,7 @@ async function getStatus(){
     const response = await fetch(`${BACKEND_URL}/status`)
     if (response.ok) {
         const data = await response.json();
-        console.log(data);
         payload = data;
-        console.log(payload)
     } else {
         alert("Error fetching status");
     }
@@ -42,6 +40,16 @@ async function toggleMode(){
 
 function setHeight(input){
     document.getElementById("height").innerHTML = input
+}
+
+function setAuto(input){
+    if(input == -1){
+        document.getElementById("autoStatus").innerHTML = "On"
+    }
+    else{
+        document.getElementById("autoStatus").innerHTML = "Off"
+    }
+
 }
 
 async function setAutoStatus(input){
@@ -105,6 +113,7 @@ async function updatePage(){
     await getStatus();
     setHeight(payload.waterHeight)
     setPumpStatus(payload.pumpStatus)
+    setAuto(payload.pumpMode)
 }
 
 //Program Setup

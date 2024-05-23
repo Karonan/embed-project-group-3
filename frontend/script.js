@@ -97,7 +97,6 @@ document.getElementById("pumpButton").addEventListener("click", async function()
 async function initPage(){
     await updatePage();
     setAutoStatus(payload.pumpMode)
-    console.log(payload)
 }
 
 async function updatePage(){

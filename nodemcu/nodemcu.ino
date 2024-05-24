@@ -23,8 +23,6 @@ const int pumpTogglePin = 16;
 const int pumpStatus = 13;
 
 EspSoftwareSerial::UART testSerial;
-char buf[50];
-int idx = 0;
 String sensorReadings;
 String waterHeight = "-1";
 
@@ -53,21 +51,9 @@ void loop() {
   //Send an HTTP POST request
   while (testSerial.available() > 0)
   {
-    buf[idx] = testSerial.read();
-    // Serial.print(buf[idx]);
-    if (buf[idx] == '\n')
-    {
-      waterHeight = "";
-      for (int i = 0; i < idx; i++)
-      {
-        waterHeight += String(buf[i]);
-      }
-      idx = 0;
-    }
-    else
-    {
-      idx++;
-    }
+    char buf = testSerial.read();
+    int test = (int)(buf[idx]);
+    waterHeight = String(test);
     yield();
   }
   if ((millis() - lastTime) > timerDelay) {
@@ -75,7 +61,6 @@ void loop() {
     if(WiFi.status() == WL_CONNECTED){
 
       sensorReadings = httpGETRequest(serverStatus);
-      // Serial.println(sensorReadings);
       JSONVar myObject = JSON.parse(sensorReadings);
 
       //check the type of the var
@@ -90,15 +75,7 @@ void loop() {
       //an array of all the keys in the object
       JSONVar keys = myObject.keys(); // {pumpMode, waterHeight, pumpStatus, waterTreshold}
 
-      // Serial.println(char(myObject[keys[3]]));
       testSerial.write(char(myObject[keys[3]])); // send waterTreshold to STM
-    
-      // for (int i = 0; i < keys.length(); i++) {
-      //   JSONVar value = myObject[keys[i]];
-      //   Serial.print(keys[i]);
-      //   Serial.print(" = ");
-      //   Serial.println(value);
-      // }
 
       if (int(myObject[keys[0]]) == -1) // Pump Mode AUTO
       {

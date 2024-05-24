@@ -59,7 +59,7 @@ const thresholdButton = document.getElementById("thresholdButton")
 const thresholdInput = document.querySelector("#thresholdInput")
 
 function setHeight(input){
-    let n = parseFloat(7.5 - input/10)
+    let n = parseFloat(8.5 - input/10)
     n = n.toPrecision(2)
     document.getElementById("height").innerHTML = n
 }
@@ -115,7 +115,7 @@ function floatToString(input){
 //     var input = parseFloat(thresholdInput.value)
 //     input = input.toPrecision(2)
 //     input *= 10
-//     input = 75 - input
+//     input = 85 - input
 //     if(input < 0) input = 0
 //     await setThreshold(input)
 //     thresholdInput.value = ''
@@ -164,7 +164,7 @@ slider.addEventListener('mouseup', function(event) {
         var input = parseFloat(slider.value)/10
         input = input.toPrecision(2)
         input *= 10
-        input = 75 - input
+        input = 85 - input
         // if(input < 0) input = 0
         setThreshold(input)
     }
@@ -173,10 +173,10 @@ slider.addEventListener('mouseup', function(event) {
 
 async function initPage(){
     await updatePage();
-    let n = parseFloat(7.5 - payload.waterThreshold/10)
+    let n = parseFloat(8.5 - payload.waterThreshold/10)
     n = n.toPrecision(2)
     output.innerHTML = "Set water height threshold : "+n.toString()+" cm";
-    slider.value = (75-payload.waterThreshold).toString()
+    slider.value = (85-payload.waterThreshold).toString()
 }
 
 async function updatePage(){
